@@ -11,6 +11,6 @@ namespace CoursesSignUp.API.Commands.Responses
         public Guid CourseId { get; set; }
 
         //validation
-        public ValidationResult ValidationResult { get; set; }
+        public ValidationResult ValidationResult { get; set; } = new ValidationResult();
     }
 }

@@ -13,12 +13,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
+using Newtonsoft.Json;
 
 namespace CoursesSignUp.API.Commands.Handlers
 {
     public class SignUpCourseHandler : IRequestHandler<SignUpCourseRequest, SignUpCourseResponse>
     {
         private readonly IMessageBus _bus;
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         public SignUpCourseHandler(IMessageBus bus)
         {
@@ -29,16 +32,24 @@ namespace CoursesSignUp.API.Commands.Handlers
         {
             var result = new SignUpCourseResponse();
 
-            // Validation
-            if (!request.IsValid())
+            try
             {
-                result.ValidationResult = request.ValidationResult;
-                return await Task.FromResult(result);
-            }
+                // Validation
+                if (!request.IsValid())
+                {
+                    result.ValidationResult = request.ValidationResult;
+                    return await Task.FromResult(result);
+                }
 
-            //Send event to a service Bus
-            var message = new SignUpIntegrationEvent(request.Name, request.Email, request.DateOfBirth, request.CourseId);
-            await _bus.PublishAsync<SignUpIntegrationEvent>(message);
+                //Send event to a service Bus
+                var message = new SignUpIntegrationEvent(request.Name, request.Email, request.DateOfBirth, request.CourseId);
+                await _bus.PublishAsync<SignUpIntegrationEvent>(message);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"", JsonConvert.SerializeObject(ex));
+                result.ValidationResult.Errors.Add(new ValidationFailure(string.Empty, "An error has occurred please try again."));
+            }
 
             return await Task.FromResult(result);
 

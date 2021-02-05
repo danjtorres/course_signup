@@ -7,9 +7,12 @@ using CoursesSignUp.Consumer.API.Queries;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
+using Newtonsoft.Json;
 
 namespace CoursesSignUp.Consumer.API.Handlers
 {
@@ -17,6 +20,7 @@ namespace CoursesSignUp.Consumer.API.Handlers
     {
         private readonly IMessageBus _bus;
         private readonly IServiceProvider _serviceProvider;
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         public CourseSignUpHandler(IServiceProvider serviceProvider, IMessageBus bus)
         {
@@ -39,40 +43,48 @@ namespace CoursesSignUp.Consumer.API.Handlers
 
         private async Task SignUpCourse(SignUpIntegrationEvent request)
         {
-
-            using (var scope = _serviceProvider.CreateScope())
+            try
             {
-                var courseRepository = scope.ServiceProvider.GetRequiredService<ICourseRepository>();
-                var signUpRepository = scope.ServiceProvider.GetRequiredService<ISignUpRepository>();
-
-                //verify
-                bool isAvailable = await VerifyAvailableRoomAsync(courseRepository, signUpRepository, request.CourseId);
-                bool notAppliedYet = await VerifyStudentNotAppliedYet(signUpRepository, request.CourseId, request.Email);
-
-                if (isAvailable && notAppliedYet)
+                using (var scope = _serviceProvider.CreateScope())
                 {
+                    var courseRepository = scope.ServiceProvider.GetRequiredService<ICourseRepository>();
+                    var signUpRepository = scope.ServiceProvider.GetRequiredService<ISignUpRepository>();
+
+                    //verify
+                    bool isAvailable = await VerifyAvailableRoomAsync(courseRepository, signUpRepository, request.CourseId);
+                    bool notAppliedYet = await VerifyStudentNotAppliedYet(signUpRepository, request.CourseId, request.Email);
+
                     // Map signUpCourse
                     var signUpCourse = MapSignUpCourse(request);
 
-                    //add course to context repository
-                    signUpRepository.Create(signUpCourse);
+                    if (isAvailable && notAppliedYet)
+                    {
 
-                    //NextStep
-                    //validationResult false need to register the error, retry X times. 
-                    //add sign up course to context repository 
-                    var validationResult = await PersistData(signUpRepository.UnitOfWork);
+                        //add course to context repository
+                        signUpRepository.Create(signUpCourse);
 
-                    //send a confirmation email
-                    SendEmail(true);
+                        //add sign up course to context repository 
+                        var validationResult = await PersistData(signUpRepository.UnitOfWork);
+
+                        //send a confirmation email
+                        SendEmail(signUpCourse, true);
+                    }
+                    else
+                    {
+                        //send a decline email if not applyed yet
+                        if (notAppliedYet)
+                            SendEmail(signUpCourse, false);
+                    }
+
+                    await Task.FromResult(true);
                 }
-                else
-                {
-                    //send a decline email if not applyed yet
-                    if (notAppliedYet)
-                        SendEmail(false);
-                }
 
-                await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"", JsonConvert.SerializeObject(ex));
+                //NextStep
+                //In erro, retry X times.
             }
 
         }
@@ -119,15 +131,17 @@ namespace CoursesSignUp.Consumer.API.Handlers
             return validationResult;
         }
 
-        private void SendEmail(bool confirmation)
+        private void SendEmail(SignUpCourse signUpCourse, bool confirmation)
         {
             if (confirmation)
             {
+                _log.Info($"Congratulation {signUpCourse.Name}, you're registerd to the course.");
                 //NextStep
-                //log email confirmation;
+                //create the email sender;
             }
             else
             {
+                _log.Info($"Hello {signUpCourse.Name}, unfortunately our course has no more vacancies, if you wish, subscribe to another available.");
                 //NextStep
                 //log email decline;
             }

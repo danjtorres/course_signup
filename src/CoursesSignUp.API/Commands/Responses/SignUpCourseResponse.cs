@@ -9,6 +9,6 @@ namespace CoursesSignUp.API.Commands.Responses
     public class SignUpCourseResponse
     {
         //validation
-        public ValidationResult ValidationResult { get; set; }
+        public ValidationResult ValidationResult { get; set; } = new ValidationResult();
     }
 }

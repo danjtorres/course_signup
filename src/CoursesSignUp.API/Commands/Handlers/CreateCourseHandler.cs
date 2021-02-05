@@ -9,12 +9,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
+using Newtonsoft.Json;
 
 namespace CoursesSignUp.API.Commands.Handlers
 {
     public class CreateCourseHandler : IRequestHandler<CreateCourseRequest, CreateCourseResponse>
     {
+        
         private readonly ICourseRepository _courseRepository;
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         public CreateCourseHandler(ICourseRepository courseRepository)
         {
@@ -25,24 +29,33 @@ namespace CoursesSignUp.API.Commands.Handlers
         {
             var result = new CreateCourseResponse();
 
-            // Validation
-            if (!request.IsValid())
+            try
             {
-                result.ValidationResult = request.ValidationResult;
-                return await Task.FromResult(result);
+
+                // Validation
+                if (!request.IsValid())
+                {
+                    result.ValidationResult = request.ValidationResult;
+                    return await Task.FromResult(result);
+                }
+
+                // Map Course
+                var course = MapCourse(request);
+
+                //add course to context repository
+                _courseRepository.Create(course);
+
+                // persist data
+                result.ValidationResult = await PersistData(_courseRepository.UnitOfWork);
+
+                //Map return
+                result.CourseId = course.Id;
             }
-
-            // Map Course
-            var course = MapCourse(request);
-
-            //add course to context repository
-            _courseRepository.Create(course);
-
-            // persist data
-            result.ValidationResult = await PersistData(_courseRepository.UnitOfWork);
-            
-            //Map return
-            result.CourseId = course.Id;
+            catch (Exception ex)
+            {
+                _log.Error($"", JsonConvert.SerializeObject(ex));
+                result.ValidationResult.Errors.Add(new ValidationFailure(string.Empty, "An error has occurred please try again."));
+            }
 
             return await Task.FromResult(result);
 

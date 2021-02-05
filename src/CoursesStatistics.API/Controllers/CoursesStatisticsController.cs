@@ -18,6 +18,7 @@ namespace CoursesStatistics.API.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> CoursesAges([FromServices] ICoursesStatisticsQueries coursesStatisticsQueries)
         {
+
             var coursesAges = await coursesStatisticsQueries.CoursesAges();
 
             return Ok(coursesAges);

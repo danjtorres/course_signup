@@ -14,7 +14,7 @@ namespace CoursesSignUp.API.Commands.Requests
         public string Name { get; set; }
 
         //validation
-        public ValidationResult ValidationResult { get; set; }
+        public ValidationResult ValidationResult { get; set; } = new ValidationResult();
 
         public bool IsValid()
         {
