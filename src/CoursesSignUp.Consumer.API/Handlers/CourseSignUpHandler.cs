@@ -41,7 +41,7 @@ namespace CoursesSignUp.Consumer.API.Handlers
                 async request => await SignUpCourse(request));
         }
 
-        private async Task SignUpCourse(SignUpIntegrationEvent request)
+        public async Task SignUpCourse(SignUpIntegrationEvent request)
         {
             try
             {

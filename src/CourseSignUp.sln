@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statistics", "Statistics", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesSignUp.API", "CoursesSignUp.API\CoursesSignUp.API.csproj", "{5F585A9E-A9D0-4BD7-A2B9-CB160F2B4D24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesStatistics.API", "CoursesStatistics.API\CoursesStatistics.API.csproj", "{1541C2E5-FB1D-4EFE-8609-06878C9B7899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesStatistics.API", "CoursesStatistics.API\CoursesStatistics.API.csproj", "{1541C2E5-FB1D-4EFE-8609-06878C9B7899}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Courses.Domain", "Courses.Domain\Courses.Domain.csproj", "{22F002AE-C375-42B3-BE4B-B02A8398D8E8}"
 EndProject
@@ -19,11 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Courses.Infra", "Courses.In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageBus", "MessageBus", "{9C62DEBE-633D-468F-867C-0EF8B3C446D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Courses.MessageBus", "Courses.MessageBus\Courses.MessageBus.csproj", "{41525427-3151-4669-A565-84CCA8822CEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Courses.MessageBus", "Courses.MessageBus\Courses.MessageBus.csproj", "{41525427-3151-4669-A565-84CCA8822CEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Consumers", "Consumers", "{5610A3DF-88F7-4874-AD53-EB23F8D07374}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesSignUp.Consumer.API", "CoursesSignUp.Consumer.API\CoursesSignUp.Consumer.API.csproj", "{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoursesSignUp.Consumer.API", "CoursesSignUp.Consumer.API\CoursesSignUp.Consumer.API.csproj", "{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoursesSignUp.Tests", "CoursesSignUp.Tests\CoursesSignUp.Tests.csproj", "{529A3F23-70B8-42FE-9BD3-46838A2E9A40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{529A3F23-70B8-42FE-9BD3-46838A2E9A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{529A3F23-70B8-42FE-9BD3-46838A2E9A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{529A3F23-70B8-42FE-9BD3-46838A2E9A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{529A3F23-70B8-42FE-9BD3-46838A2E9A40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{1541C2E5-FB1D-4EFE-8609-06878C9B7899} = {FC5921CC-A7D3-4842-889E-C80CEF2F6119}
 		{41525427-3151-4669-A565-84CCA8822CEE} = {9C62DEBE-633D-468F-867C-0EF8B3C446D4}
 		{8D0B7F70-A1A2-46D2-8DB6-33BC29E792D4} = {5610A3DF-88F7-4874-AD53-EB23F8D07374}
+		{529A3F23-70B8-42FE-9BD3-46838A2E9A40} = {43F57569-4BFC-41B8-AE0B-B010A8B0109A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB27A711-EDCA-4E26-8046-D54C7F216FE0}
